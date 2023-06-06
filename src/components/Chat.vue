@@ -26,15 +26,21 @@ const count = ref(0)
     <n-modal
         v-model:show="showModal"
         preset="dialog"
-        title="替换ApiKey"
         positive-text="保存"
         negative-text="取消"
-        @positive-click="replaceApiKey"
-        @negative-click="showModal=false;apiKey=''"
         :maskClosable="false"
-        @close="showModal=false;apiKey=''"
-    >
-      <n-input v-model:value="apiKey" placeholder="填写您的ApiKey"/>
+        type="info"
+        title="ApiKey"
+        :show-icon="false"
+        @close="showModal=false;inputApiKey=''">
+      <template #default>
+        <n-input v-model:value="inputApiKey" placeholder="填写您的ApiKey"/>
+      </template>
+      <template #action>
+        <n-button type="primary" @click="replaceApiKey">保存</n-button>
+        <n-button type="info" @click.stop="inputApiKey=''">清空</n-button>
+        <n-button @click.stop="showModal=false;inputApiKey=''">取消</n-button>
+      </template>
     </n-modal>
   </div>
 </template>
@@ -45,6 +51,7 @@ import {fetchEventSource} from "@microsoft/fetch-event-source";
 export default {
   data() {
     return {
+      inputApiKey: "",
       apiKey: "",
       showModal: false,
       allowedSend: true,
@@ -68,12 +75,24 @@ export default {
   },
   mounted() {
     this.handleScroll()
+    this.safariHacks()
   },
   methods: {
+    safariHacks() {
+      let windowsVH = window.innerHeight / 100;
+      document.querySelector('.chatBody').style.setProperty('--vh', windowsVH + 'px');
+      window.addEventListener('resize', function() {
+        document.querySelector('.chatBody').style.setProperty('--vh', windowsVH + 'px');
+      });
+    },
     init() {
-      this.apiKey = localStorage.getItem("ApiKey")
+      let apiKey = localStorage.getItem("ApiKey")
+      this.apiKey = apiKey ? "" : apiKey
+      this.inputApiKey = this.apiKey
     },
     replaceApiKey() {
+      this.showModal = false
+      this.apiKey = this.inputApiKey
       localStorage.setItem("ApiKey", this.apiKey)
     },
     handleScroll() {
@@ -106,7 +125,7 @@ export default {
         body: JSON.stringify(body),
         headers: {
           "Content-Type": "application/json",
-          "Authorization": "Bearer " + (this.apiKey || this.apiKey.trim().length === 0) ? "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" : this.apiKey
+          "Authorization": "Bearer " + ((!that.apiKey || that.apiKey.trim().length === 0) ? "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" : that.apiKey)
         },
         signal: abortController.signal,
         async onopen(response) {
@@ -204,7 +223,7 @@ export default {
 
   .chatBody {
     border: 1px solid #ccc;
-    height: 100vh;
+    height: calc(var(--vh, 1vh) * 100);
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -215,7 +234,7 @@ export default {
 
       .header {
         border-bottom: 1px solid #cccccc;
-        padding: 10px 0 10px 10px;
+        padding: 10px;
         font-size: 1.2rem;
         font-weight: bold;
         position: sticky;
