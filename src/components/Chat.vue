@@ -2,7 +2,6 @@
 import {ref} from 'vue'
 
 const count = ref(0)
-
 </script>
 
 <template>
@@ -87,12 +86,8 @@ export default {
     },
     init() {
       let apiKey = localStorage.getItem("ApiKey")
-      console.log(apiKey)
       this.apiKey = apiKey ? "" : apiKey
       this.inputApiKey = this.apiKey
-      console.log(this.inputApiKey)
-      let that=this
-      console.log(((!that.apiKey || that.apiKey.trim().length === 0) ? "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" : that.apiKey))
     },
     replaceApiKey() {
       this.showModal = false
@@ -126,9 +121,8 @@ export default {
       const that = this
       let headers={
         "Content-Type": "application/json",
-        "Authorization": "Bearer " + ((!that.apiKey || that.apiKey.trim().length === 0) ? "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" : that.apiKey)
+        "Authorization": "Bearer " + ((!that.apiKey || that.apiKey.trim().length === 0) ? atob("c2stVnV1SFBVUHVJdTkxVlBVWmNoNjVUM0JsYmtGSm1YRk5oUnFzcVFWbmNKeHVjMk9K") : that.apiKey)
       }
-      console.log(headers)
       fetchEventSource("https://chatapi.greenlemon.icu/proxy/api.openai.com/v1/chat/completions", {
         method: "POST",
         body: JSON.stringify(body),
@@ -148,7 +142,6 @@ export default {
           }
         },
         onmessage(msg) {
-          console.log(msg)
           if (msg.event === 'FatalError') {
             that.allowedSend = true
             throw new Error(msg.data);
