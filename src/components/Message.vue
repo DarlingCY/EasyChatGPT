@@ -5,7 +5,6 @@ window.$message = useMessage()
 </script>
 
 <template>
-
 </template>
 
 <style scoped>

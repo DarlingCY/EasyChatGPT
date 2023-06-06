@@ -11,6 +11,7 @@ const count = ref(0)
       <div class="messageBox" ref="messageBox">
         <div class="header">
           <span>ChatGPT-3.5-Turbo</span>
+          <n-button @click.stop="showModal=true" size="large">替换ApiKey</n-button>
         </div>
         <div class="message" :class="'user'===item['role']?'messageRight':'messageLeft'" v-for="(item,index) in messages" :key="index">
           <n-avatar round :size="36" :src="'user'===item['role']?'https://avatars.githubusercontent.com/u/41161187?s=40&v=4':'https://i-1.rar8.net/2023/2/24/e7a2033b-c04e-418c-a1a8-0c3a109557d1.png'"/>
@@ -22,6 +23,19 @@ const count = ref(0)
         <n-button type="info" @click.stop="sendMessage" size="large" :disabled="!allowedSend">发送</n-button>
       </div>
     </div>
+    <n-modal
+        v-model:show="showModal"
+        preset="dialog"
+        title="替换ApiKey"
+        positive-text="保存"
+        negative-text="取消"
+        @positive-click="replaceApiKey"
+        @negative-click="showModal=false;apiKey=''"
+        :maskClosable="false"
+        @close="showModal=false;apiKey=''"
+    >
+      <n-input v-model:value="apiKey" placeholder="填写您的ApiKey"/>
+    </n-modal>
   </div>
 </template>
 <script>
@@ -31,6 +45,8 @@ import {fetchEventSource} from "@microsoft/fetch-event-source";
 export default {
   data() {
     return {
+      apiKey: "",
+      showModal: false,
       allowedSend: true,
       inputText: "",
       initMessage: [
@@ -47,10 +63,19 @@ export default {
       ],
     }
   },
+  created() {
+    this.init()
+  },
   mounted() {
     this.handleScroll()
   },
   methods: {
+    init() {
+      this.apiKey = localStorage.getItem("ApiKey")
+    },
+    replaceApiKey() {
+      localStorage.setItem("ApiKey", this.apiKey)
+    },
     handleScroll() {
       this.$nextTick(() => {
         let scrollElem = this.$refs.messageBox;
@@ -70,7 +95,7 @@ export default {
       this.handleScroll()
       let body = {
         model: "gpt-3.5-turbo",
-        messages: [...this.initMessage, ...this.messages].reverse().slice(0,10).reverse(),
+        messages: [...this.initMessage, ...this.messages].reverse().slice(0, 10).reverse(),
         stream: true
       }
       this.allowedSend = false
@@ -81,7 +106,7 @@ export default {
         body: JSON.stringify(body),
         headers: {
           "Content-Type": "application/json",
-          "Authorization": "Bearer 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"
+          "Authorization": "Bearer " + (this.apiKey || this.apiKey.trim().length === 0) ? "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" : this.apiKey
         },
         signal: abortController.signal,
         async onopen(response) {
@@ -197,6 +222,8 @@ export default {
         top: 0;
         background-color: #fff;
         z-index: 999;
+        display: flex;
+        justify-content: space-between;
       }
 
       .message {
