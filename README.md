@@ -1,7 +1,11 @@
-# Vue 3 + Vite
+## EasyChatGPT
 
-This template should help get you started developing with Vue 3 in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+极简食用ChatGPT
 
-## Recommended IDE Setup
+### 支持
 
-- [VS Code](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
+- ChatGPT-3.5-Turbo
+
+### 引用
+
+- [vercel-reverse-proxy](https://github.com/gaboolic/vercel-reverse-proxy)
