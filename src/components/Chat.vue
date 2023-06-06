@@ -11,7 +11,7 @@ const count = ref(0)
       <div class="messageBox" ref="messageBox">
         <div class="header">
           <span>ChatGPT-3.5-Turbo</span>
-          <n-button @click.stop="showModal=true" size="large">替换ApiKey</n-button>
+          <n-button @click.stop="showModal=true" size="medium">替换ApiKey</n-button>
         </div>
         <div class="message" :class="'user'===item['role']?'messageRight':'messageLeft'" v-for="(item,index) in messages" :key="index">
           <n-avatar round :size="36" :src="'user'===item['role']?'https://avatars.githubusercontent.com/u/41161187?s=40&v=4':'https://i-1.rar8.net/2023/2/24/e7a2033b-c04e-418c-a1a8-0c3a109557d1.png'"/>
@@ -224,6 +224,7 @@ export default {
         z-index: 999;
         display: flex;
         justify-content: space-between;
+        align-items: center;
       }
 
       .message {
