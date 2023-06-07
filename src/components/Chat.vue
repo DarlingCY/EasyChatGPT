@@ -113,7 +113,7 @@ export default {
       this.handleScroll()
       let body = {
         model: "gpt-3.5-turbo",
-        messages: [...this.initMessage, ...this.messages].reverse().slice(0, 10).reverse(),
+        messages: [...this.initMessage, ...(this.messages.reverse().slice(0, 10).reverse())],
         stream: true
       }
       this.allowedSend = false
