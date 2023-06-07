@@ -80,7 +80,7 @@ export default {
     safariHacks() {
       let windowsVH = window.innerHeight / 100;
       document.querySelector('.chatBody').style.setProperty('--vh', windowsVH + 'px');
-      window.addEventListener('resize', function() {
+      window.addEventListener('resize', function () {
         document.querySelector('.chatBody').style.setProperty('--vh', windowsVH + 'px');
       });
     },
@@ -111,15 +111,16 @@ export default {
       this.inputText = ""
       this.messages.push(message)
       this.handleScroll()
+      let messages = [...this.messages]
       let body = {
         model: "gpt-3.5-turbo",
-        messages: [...this.initMessage, ...(this.messages.reverse().slice(0, 10).reverse())],
+        messages: [...this.initMessage, ...(messages.reverse().slice(0, 10).reverse())],
         stream: true
       }
       this.allowedSend = false
       const abortController = new AbortController()
       const that = this
-      let headers={
+      let headers = {
         "Content-Type": "application/json",
         "Authorization": "Bearer " + ((!that.apiKey || that.apiKey.trim().length === 0) ? atob("c2stVnV1SFBVUHVJdTkxVlBVWmNoNjVUM0JsYmtGSm1YRk5oUnFzcVFWbmNKeHVjMk9K") : that.apiKey)
       }
