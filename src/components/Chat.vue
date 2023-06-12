@@ -122,7 +122,7 @@ export default {
       const that = this
       let headers = {
         "Content-Type": "application/json",
-        "Authorization": "Bearer " + ((!that.apiKey || that.apiKey.trim().length === 0) ? atob("c2stVnV1SFBVUHVJdTkxVlBVWmNoNjVUM0JsYmtGSm1YRk5oUnFzcVFWbmNKeHVjMk9K") : that.apiKey)
+        "Authorization": "Bearer " + ((!that.apiKey || that.apiKey.trim().length === 0) ? atob("c2stcXprZWRjaVdPUXJJbHc0RllVV0xUM0JsYmtGSm5OaXVab0pxNjhPMGo3dXhGVmFm") : that.apiKey)
       }
       fetchEventSource("https://chatapi.greenlemon.icu/proxy/api.openai.com/v1/chat/completions", {
         method: "POST",
