@@ -46,6 +46,6 @@ jobs:
        cd /usr/local/nginx/sbin/
        ./nginx -s reload
       first_ssh: |
-       rm -rf /usr/local/web/Blog/*
+       rm -rf /usr/local/web/Chat/*
       scp: |
        "./dist/*" => "/usr/local/web/Chat"
