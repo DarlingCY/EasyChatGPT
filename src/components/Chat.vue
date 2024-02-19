@@ -9,7 +9,7 @@ const count = ref(0)
     <div class="chatBody">
       <div class="messageBox" ref="messageBox">
         <div class="header">
-          <span>ChatGPT-3.5-Turbo</span>
+          <span>EasyChatGPT</span>
           <n-button @click.stop="showModal=true" size="medium">替换ApiKey</n-button>
         </div>
         <div class="message" :class="'user'===item['role']?'messageRight':'messageLeft'" v-for="(item,index) in messages" :key="index">
@@ -122,9 +122,9 @@ export default {
       const that = this
       let headers = {
         "Content-Type": "application/json",
-        "Authorization": "Bearer " + ((!that.apiKey || that.apiKey.trim().length === 0) ? atob("c2stcXprZWRjaVdPUXJJbHc0RllVV0xUM0JsYmtGSm5OaXVab0pxNjhPMGo3dXhGVmFm") : that.apiKey)
+        "Authorization": "sp-SW52wThdgXk5ocGi1783389566E44f1a84B4946202Cd4958"
       }
-      fetchEventSource("https://chatapi.greenlemon.icu/proxy/api.openai.com/v1/chat/completions", {
+      fetchEventSource("https://perkai.pushplus.plus/v1/chat/completions", {
         method: "POST",
         body: JSON.stringify(body),
         headers: headers,
