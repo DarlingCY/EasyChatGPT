@@ -1,35 +1,51 @@
-name: EasyChatGPT Action
+# main.yml
+# 一个 workflow，名字为Blog
+name: EasyChatGPT
+
+# 触发 workflow 的事件
 on:
- #监听push操作
  push:
- branches:
- # mian分⽀，你也可以改成其他分⽀
- - main
+  # 分支随意
+  branches:
+   - main
+
+# 一个workflow由执行的一项或多项job
 jobs:
- # 任务ID
+ # 一个job任务，任务名为build
  build:
- # 运⾏环境
- runs-on: ubuntu-latest
- # 步骤
- steps:
- # 使⽤别⼈的action
- - uses: actions/checkout@v2
- # 步骤名称
- - name: npm install
- # 步骤执⾏指令
- run: npm install
- - name: npm run build
- run: npm run build
- # 命名这个任务为发布Deploy
- - name: Deploy
- # 因为构建之后，需要把代码上传到服务器上，所以需要连接到ssh，并且做⼀个拷⻉操作
- uses: cross-the-world/scp-pipeline@master env:
- WELCOME: "ssh scp ssh pipelines"
- LASTSSH: "Doing something after copying"
- with:
- host: ${{ secrets.USER_HOST }}
- user: ${{ secrets.USER_NAME }}
- pass: ${{ secrets.USER_PASS }}
- connect_timeout: 10s
- local: './dist/*'
- remote: /usr/local/web/Chat
+  # runs-on 指定job任务运行所需要的虚拟机环境(必填字段)
+  runs-on: ubuntu-latest
+  # steps是每个Job的运行步骤，可以包含一个或多个步骤
+  steps:
+   # action命令，切换分支获取源码
+   - name: Checkout
+    # 使用action库  actions/checkout获取源码
+     uses: actions/checkout@master
+   # action命令，安装Node16.0.0
+   - name: use Node.js 18.16.0
+    # 使用action库  actions/setup-node安装node
+     uses: actions/setup-node@v1
+     with:
+      node-version: 18.16.0
+   # action命令，install && test
+   - name: install and build
+    # 运行的命令或者 action
+     run: |
+      npm i
+      npm run build
+      # 环境变量
+   - name: deploy
+     uses: cross-the-world/ssh-scp-ssh-pipelines@latest
+     with:
+      host: ${{ secrets.USER_HOST }}
+      user: ${{ secrets.USER_NAME }}
+      pass: ${{ secrets.USER_PASS }}
+      port: 22
+      connect_timeout: 10s
+      last_ssh: |
+       cd /usr/local/nginx/sbin/
+       ./nginx -s reload
+      first_ssh: |
+       rm -rf /usr/local/web/Blog/*
+      scp: |
+       "./dist/*" => "/usr/local/web/Chat"
